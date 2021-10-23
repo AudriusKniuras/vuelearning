@@ -2,7 +2,7 @@
 <div class="container">
   <Header title="Task Tracker"/>
   <!-- Bind tasks data to show it dinamically -->
-  <Tasks @delete-task="deleteTask" :tasks="tasks" />
+  <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks" />
 </div>
 </template>
 
@@ -24,7 +24,12 @@ export default {
   methods: {
     deleteTask(id) {
       this.tasks = this.tasks.filter((task) => task.id !== id)
-    }
+    },
+    toggleReminder(id) {
+      this.tasks = this.tasks.map((task) => 
+      task.id === id ? {...task, reminder: !task.reminder} :
+      task)
+    },
   },
   // lifecycle hook
   // code runs when the instance (this app) is created
