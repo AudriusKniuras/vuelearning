@@ -1,5 +1,5 @@
 <template>
-  <div :class="[task.reminder ? 'reminder' : '', 'task']">
+  <div @dblclick="$emit('toggle-reminder', task.id)" :class="[task.reminder ? 'reminder' : '', 'task']">
     <h3>
       {{ task.text }}
       <i @click="onDelete(task.id)" class="fas fa-times"></i>
@@ -21,7 +21,7 @@ export default {
       // we emite the id to upper level (tasks)
       // because the tasks are defined 2 levels up - App
       this.$emit('delete-task', id)
-    }
+    },
   }
 }
 </script>
