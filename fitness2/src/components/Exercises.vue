@@ -17,12 +17,12 @@
         <button @click="weightToModal(ex)" class="weight">weight: {{ ex.weight }}</button>
       </div>
       <div
-        @click="onClick(ex.id - 1, i - 1)"
+        @click="lowerReps(ex.id, i-1)"
         :key="i"
-        v-for="i in ex.repsArr.length"
+        v-for="i in ex.sets"
         class="circle"
-        :style="ex.started[i - 1] ? { background: 'green' } : null">
-        <p :style="{ color: 'white' }">{{ ex.repsArr[i - 1] }}</p>
+        :style="checkIfStarted(ex, i-1) ? { background: 'green' } : null">
+        <p :style="{ color: 'rgb(209, 209, 209)' }">{{ displayReps(ex, i-1) }}</p>
       </div>
     </div>
     <br>
@@ -51,18 +51,35 @@ export default {
     };
   },
   methods: {
-    onClick(id, circle_id) {
-      this.ex_changed = this.exercises;
-      if (this.ex_changed[id].started[circle_id] === false) {
-        this.ex_changed[id].started[circle_id] = true;
+    checkIfStarted(exercise, circle_id) {
+      if ( exercise.repsArr.length > circle_id ) {
+        return true
       } else {
-        this.ex_changed[id].sets[circle_id] -= 1;
-        if (this.ex_changed[id].sets[circle_id] === -1) {
-          this.ex_changed[id].started[circle_id] = false;
-          this.ex_changed[id].sets[circle_id] = this.ex_changed[id].initialReps;
+        return false
+      }
+    },
+    displayReps(exercise, circle_id) {
+      if ( exercise.repsArr.length > circle_id ) {
+        return exercise.repsArr[circle_id]
+      } else {
+        return -1
+      }
+    },
+    lowerReps(id, circle_id) {
+      this.ex_changed = this.exercises;
+
+      if ( this.ex_changed.filter((e) => e.id == id)[0].repsArr.length > circle_id ) {
+        if (this.ex_changed.filter((e) => e.id == id)[0].repsArr[circle_id] > 0) {
+          this.ex_changed.filter((e) => e.id == id)[0].repsArr[circle_id] -= 1;
+        } else {
+          this.ex_changed.filter((e) => e.id == id)[0].repsArr[circle_id] = this.ex_changed.filter((e) => e.id == id)[0].initReps
         }
       }
     },
+
+
+
+
     weightToModal(exercise) {
       this.isOpen = true
       this.modalObject = exercise
